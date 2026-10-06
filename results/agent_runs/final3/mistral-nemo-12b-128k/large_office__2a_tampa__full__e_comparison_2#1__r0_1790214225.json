@@ -1,0 +1,101 @@
+{
+ "question_id": "large_office__2a_tampa__full__e_comparison_2#1__r0",
+ "model": "mistral-nemo-12b-128k",
+ "reported_model": "mistral-nemo-12b-128k",
+ "outcome": "no_answer",
+ "answer": null,
+ "needed_streams": "",
+ "turns": 4,
+ "tool_calls": 3,
+ "input_tokens": 1604,
+ "output_tokens": 582,
+ "seconds": 20.1,
+ "prompt_tokens_per_turn": [
+  603,
+  112,
+  299,
+  590
+ ],
+ "transcript": [
+  {
+   "role": "assistant",
+   "stop_reason": "tool_use",
+   "content": [
+    {
+     "type": "tool_use",
+     "id": "call_lm2s523s",
+     "name": "query_graph",
+     "input": {
+      "sparql": "SELECT ?t1 WHERE { ?p a brick:Point . ?p rdfs:label 'whole building' }"
+     }
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "call_lm2s523s",
+     "content": "[]",
+     "is_error": false
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "stop_reason": "tool_use",
+   "content": [
+    {
+     "type": "tool_use",
+     "id": "call_fcqez0b3",
+     "name": "query_graph",
+     "input": {
+      "sparql": "SELECT ?t1 ?t2 WHERE { ?p a brick:Brick . ?p rdfs:label 'whole building' . ?p brick:has_electricity_consumption ?c . ?c brick:has_date ?t1 filters(?t1>'2018-01-01'^^xsd:date) . ?c brick:has_next_electricity_consumption ?d filters(?d<'2018-01-01'^^xsd:date) . ?d brick:has_value ?t2"
+     }
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "call_fcqez0b3",
+     "content": "Error: ParseException: Expected SelectQuery, found 'filters'  (at char 360), (line:5, col:140)",
+     "is_error": true
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "stop_reason": "tool_use",
+   "content": [
+    {
+     "type": "tool_use",
+     "id": "call_bhq6irrc",
+     "name": "query_graph",
+     "input": {
+      "sparql": "SELECT ?start_date ?end_date ?start_value ?end_value WHERE { ?p a brick:Brick . ?p rdfs:label 'whole building' . ?p brick:has_electricity_consumption ?c . ?c brick:has_date ?start_date filters(?start_date >= '2018-01-01'^^xsd:date && ?start_date < '2018-01-02'^^xsd:date) . ?c brick:has_value ?start_value . ?p brick:has_electricity_consumption ?d . ?d brick:has_date ?end_date filters(?end_date >= '2018-03-01'^^xsd:date && ?end_date < '2018-03-02'^^xsd:date) . ?d brick:has_value ?end_value"
+     }
+    }
+   ]
+  },
+  {
+   "role": "user",
+   "content": [
+    {
+     "type": "tool_result",
+     "tool_use_id": "call_bhq6irrc",
+     "content": "Error: ParseException: Expected SelectQuery, found 'filters'  (at char 406), (line:5, col:186)",
+     "is_error": true
+    }
+   ]
+  },
+  {
+   "role": "assistant",
+   "stop_reason": "end_turn",
+   "content": []
+  }
+ ]
+}

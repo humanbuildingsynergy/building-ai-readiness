@@ -1,0 +1,28 @@
+{
+ "question_id": "large_office__2a_tampa__full__t_summary_2#3__r0",
+ "model": "llama3.1-8b-128k",
+ "reported_model": "llama3.1-8b-128k",
+ "outcome": "no_answer",
+ "answer": null,
+ "needed_streams": "",
+ "turns": 1,
+ "tool_calls": 0,
+ "input_tokens": 689,
+ "output_tokens": 607,
+ "seconds": 9.2,
+ "prompt_tokens_per_turn": [
+  689
+ ],
+ "transcript": [
+  {
+   "role": "assistant",
+   "stop_reason": "end_turn",
+   "content": [
+    {
+     "type": "text",
+     "text": "{\"name\": \"run_python\", \"parameters\": {\"code\": \"import csv\\nimport json\\nfrom datetime import datetime\\n\\ncatalog = csv.DictReader(open('CATALOG_CSV', 'r'))\\nvalues = csv.DictReader(open('VALUES_CSV', 'r'))\\n\\n# Find the series ID of zone DataCenter_mid_ZN_6\\nzoneref = next(q['ref:hasExternalReference'] for q in query_graph(\\\"SELECT ?s WHERE { <https://example.com/building> <ref:hasExternalReference> ?s FILTER regex(str(?s), 'DataCenter_mid_ZN_6') . }\\\")['rows'])\\nimid = next(row[0] for row in query_graph(\\\"SELECT ?s WHERE { <https://example.com/building> <ref:hasTimeseriesId> ?im . BIND( ?im AS ?s) FILTER ( ?s='{}' ) . }\\\")['rows'].format(zoneref))\\nim = int(imid)\\ntimeseries_id = next(row[0] for row in query_graph(\\\"SELECT ?s WHERE { <https://example.com/building> <ref:hasTimeseriesId> ?im . BIND( ?im AS ?s) }\\\")['rows'].format(imid))\\n\\n# Define the types of points we need\\ntypes = ['heating-cooling band'\\n         # 'zone temperature' is not relevant here - we only care about zone temps going outside the band\\n         ]\\n\\n# Find all the relevant points in the graph\\nfor q in query_graph(\\\"SELECT ?s WHERE { <https://example.com/building> <ref:hasExternalReference> ?s FILTER regex(str(?s), 'DataCenter_mid_ZN_6') . FILTER (?s IN (\\\"{}\\\")) . } \\\".format('\",\"'.join(types)))['rows']:\\n    point_uri = q['?s']\\n    # Count how many times its value was outside the setpoint band\\n    outside_count = sum(1 for row in values\\n                        if row['timeseries_id'] == timeseries_id\\n                        and datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S')\\n                        . replace(year=2018, month=7, day=16, hour=0)\\n                        <= datetime.strptime(row['timestamp'], '%Y-%m-%d %H:%M:%S')\\n                        <= datetime.strptime('2018-07-16 23:00:00', '%Y-%m-%d %H:%M:%S')\\n                        and abs(float(row['value']))\\n                        > next(row[0] for row in query_graph(\\\"SELECT ?o WHERE { {} <ref:hasProperty>{} .}\\\".format(point_uri, timeseries_id)))['value'])\\n    print(outside_count)\\n\"}}}"
+    }
+   ]
+  }
+ ]
+}

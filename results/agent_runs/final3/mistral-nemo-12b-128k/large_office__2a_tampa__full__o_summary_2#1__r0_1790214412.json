@@ -1,0 +1,28 @@
+{
+ "question_id": "large_office__2a_tampa__full__o_summary_2#1__r0",
+ "model": "mistral-nemo-12b-128k",
+ "reported_model": "mistral-nemo-12b-128k",
+ "outcome": "no_answer",
+ "answer": null,
+ "needed_streams": "",
+ "turns": 1,
+ "tool_calls": 0,
+ "input_tokens": 607,
+ "output_tokens": 417,
+ "seconds": 9.3,
+ "prompt_tokens_per_turn": [
+  607
+ ],
+ "transcript": [
+  {
+   "role": "assistant",
+   "stop_reason": "end_turn",
+   "content": [
+    {
+     "type": "text",
+     "text": "[TOOL_CALLS]**Query Graph:**\n\n```sparql\nSELECT ?s WHERE {\n  { ?s a ref:Zone } .\n  { ?s rdfs:label \"Perimeter_bot_ZN_2\" } .\n}\n```\n\n**Run Python:**\n\n```python\nimport csv\nimport json\n\n# Load files\ncatalog_path = 'CATALOG_CSV'\nvalues_path = 'VALUES_CSV'\ngraph_path = 'GRAPH_TTL'\n\nwith open(catalog_path, 'r') as catalog_file:\n    catalog_reader = csv.DictReader(catalog_file)\n    catalog_data = [{'timeseries_id': row['timeseries_id'], 'point_uri': row['point_uri'], 'building_id': row['building_id']} for row in catalog_reader if row['point_uri'] == 'http://ontomaha.com/Perimeter_bot_ZN_2']\n\nwith open(values_path, 'r') as values_file:\n    values_reader = csv.DictReader(values_file)\n    values_data = [{\"timeseries_id\": row[\"timeseries_id\"], \"timestamp\": row[\"timestamp\"], \"value\": float(row[\"value\"])} for row in values_reader if row['timeseries_id'] in [d['timeseries_id'] for d in catalog_data]]\n\n# Filter and compute mean occupancy\nmean_occupancy = sum([value[\"value\"] for value in values_data if value[\"timestamp\"] >= \"2018-10-23T08:00:00\" and value[\"timestamp\"] <= \"2018-10-23T18:00:00\"])/len([value[\"value\"] for value in values_data if value[\"timestamp\"] >= \"2018-10-23T08:00:00\" and value[\"timestamp\"] <= \"2018-10-23T18:00:00\"])\n\n{\"value\": mean_occupancy}\n```"
+    }
+   ]
+  }
+ ]
+}

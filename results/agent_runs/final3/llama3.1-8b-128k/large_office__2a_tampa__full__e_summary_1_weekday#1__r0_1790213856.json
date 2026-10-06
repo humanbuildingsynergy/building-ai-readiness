@@ -1,0 +1,28 @@
+{
+ "question_id": "large_office__2a_tampa__full__e_summary_1_weekday#1__r0",
+ "model": "llama3.1-8b-128k",
+ "reported_model": "llama3.1-8b-128k",
+ "outcome": "no_answer",
+ "answer": null,
+ "needed_streams": "",
+ "turns": 1,
+ "tool_calls": 0,
+ "input_tokens": 661,
+ "output_tokens": 522,
+ "seconds": 8.1,
+ "prompt_tokens_per_turn": [
+  661
+ ],
+ "transcript": [
+  {
+   "role": "assistant",
+   "stop_reason": "end_turn",
+   "content": [
+    {
+     "type": "text",
+     "text": "{\"name\": \"run_python\", \"parameters\": {\"code\": \"\nimport csv\nfrom statistics import mean\nimport json\n\n# Query graph to get series ids for electricity and the building\nquery = \"\"\"\nSELECT ?seriesId\nWHERE {\n  ?point ref:hasTimeseriesId ?seriesId .\n  ?point ref:hasExternalReference brick:EnergyWholeBuildingElectricity .\n  ?point brick:validFrom \\\"2018-01-01\\\" .\n  ?point brick:validUntil \\\"2018-01-31\\\" .\n  ?point brick:intervals ?interval .\n  FILTER ((bn:uuid(?interval)) = \\\"urn:bn:2018-01:24*3600\\\" && (bn:isDayOfWeek(?interval) = \\\"Monday\\\" || bn:isDayOfWeek(?interval) = \\\"Tuesday\\\" || bn:isDayOfWeek(?interval) = \\\"Wednesday\\\" || bn:isDayOfWeek(?interval) = \\\"Thursday\\\" || bn:isDayOfWeek(?interval) = \\\"Friday\\\" ))\n}\n\"\"\"\nseries_ids = query_graph(query)['results']['bindings']\n\n# Load data from CSV\nwith open(CATALOG_CSV, 'r') as catalog_file, open(VALUE_CSV, 'r') as value_file:\n    catalog_reader = csv.DictReader(catalog_file)\n    value_reader = csv.DictReader(value_file)\n    catalog_data = list(catalog_reader)\n    value_data = list(value_reader)\n\n# Get data for given series ids\ndata = []\nfor row in catalog_data:\n    if row['building_id'] == 12345:\n        for series_id in series_ids:\n            if row['timeseries_id'] == series_id['seriesId']:\n                data.append([row['timeseries_id'], row['point_uri'], row['point_class'], row['unit'], row['quantity_kind'], row['building_id']])\n                break\n\n# Filter data\ndata = [row for row in data if row[3] == 'joule' and row[4] == 'sum']\n\n# Check if all values are available\nseries_values = {}\nfor row in value_data:\n    if row['value'] == '':\n        continue\n    series_values[row['timeseries_id']] = series_values.get(row['timeseries_id'], []) + [float(row['value'])]\n\nmean_daily_use = 0\nif all(value is not None and len(value) == 24 for value in series_values.values()):\n    mean_daily_use = mean(series_values[series_ids[0]['seriesId']])\n\nprint(mean_daily_use)\n\"}}}"
+    }
+   ]
+  }
+ ]
+}

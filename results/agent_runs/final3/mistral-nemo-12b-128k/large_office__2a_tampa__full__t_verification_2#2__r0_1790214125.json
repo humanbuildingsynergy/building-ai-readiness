@@ -1,0 +1,28 @@
+{
+ "question_id": "large_office__2a_tampa__full__t_verification_2#2__r0",
+ "model": "mistral-nemo-12b-128k",
+ "reported_model": "mistral-nemo-12b-128k",
+ "outcome": "no_answer",
+ "answer": null,
+ "needed_streams": "",
+ "turns": 1,
+ "tool_calls": 0,
+ "input_tokens": 593,
+ "output_tokens": 677,
+ "seconds": 12.7,
+ "prompt_tokens_per_turn": [
+  593
+ ],
+ "transcript": [
+  {
+   "role": "assistant",
+   "stop_reason": "end_turn",
+   "content": [
+    {
+     "type": "text",
+     "text": "[TOOL_CALLS] [**run_python**](https://veinot.digital/code-examples/heating_and_cooling_setpoints.py):```python\nimport csv, datetime\nfrom statistics import mean\n\nSERIES_ID,building_id,point_uri,point_class,DATA_VALUE,unit,quantity_kind = map(lambda x: x.strip(), \\\n    open(Catalog_CSV).readline().split(','))\nTIMESTAMP,VALUE = map(lambda x: x.strip(), open(VALUES_CSV).readline().split(','))\nbuilding_id_t=building_id\n#Find series_id for zone temperature\nquery = f\"SELECT ?series_id WHERE {{ <http://perimeter-bot-zoning/building-id/{building_id}> <http://brickschema.org/docs/ref#hasExternalReference> ?series_id . }}\"\nwith open(GRAPH_TTL) as f:\n    for line in f:\n        if query in line:\n            zone_temp_series_id = line.split()[4]\n            break\n#Find series_id for zone heating setpoint\nzone_heat_series_id = zone_temp_series_id\n#Find series_id for zone cooling setpoint\nzone_cool_series_id = zone_temp_series_id\n\n# Get hourly average temperature, heating setpoint, cooling setpoint for day for zone\nwith open(VALUES_CSV) as csvfile:\n    reader = csv.DictReader(csvfile)\n    csv_data = []\n    for row in reader:\n        if row[DATA_VALUE] == zone_temp_series_id:\n                date_time_obj = datetime.datetime.strptime(row[TIMESTAMP], '%Y-%m-%dT%H:%M:%S')\n                if date_time_obj.year == 2018 and date_time_obj.month == 1 and date_time_obj.day == 10:\n                    csv_data.append(row)\n                    #Find series_id for zone humidity and dewpoint?\nwith open(VALUES_CSV) as csvfile:\n    reader = csv.DictReader(csvfile)\n    csv_data = []\n    for row in reader:\n        if row[DATA_VALUE] == zone_heat_series_id:\n            date_time_obj = datetime.datetime.strptime(row[TIMESTAMP], '%Y-%m-%dT%H:%M:%S')\n            if date_time_obj.year == 2018 and date_time_obj.month == 1 and date_time_obj.day == 10:\n                csv_data.append(row)\n# Check if zone temperature is within heating and cooling set points\n    temperatures = [row[VALUE] for row in csv_data]\n    zone_temp_avg = mean(temperatures)\n    heating_setpoint_avg = mean(csv_data for csv_data in csv_data if row[DATA_VALUE] == zone_heat_series_id)\n    cooling_setpoint_avg = mean(csv_data for csv_data in csv_data if row[DATA_VALUE] == zone_cool_series_id)\n    if zone_temp_avg >= heating_setpoint_avg and zone_temp_avg <= cooling_setpoint_avg:\n        print(\"true\")\n    else:\n        print(\"false\")\n```\n[**submit_answer**](https://veinot.digital/code-examples/heating_and_cooling_setpoints.py):{\"abstain\": false, \"answer\": {\"value\": \"false\"}}"
+    }
+   ]
+  }
+ ]
+}
