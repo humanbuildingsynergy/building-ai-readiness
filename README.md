@@ -1,5 +1,7 @@
 # building-ai-readiness
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23197609.svg)](https://doi.org/10.5281/zenodo.23197609)
+
 Code, results and data supplement for the paper *Which Buildings Are Artificial Intelligence-Ready?
 A Measurement-Based Assessment Framework for AI Question Answering and Actuation* (W. Jung,
 University of Arizona; under review).
@@ -239,4 +241,7 @@ environment were replaced by a note.
 
 ## Citation
 
-See `CITATION.cff`. Please cite this repository and BATS v1.0.
+See `CITATION.cff`. Please cite this repository and BATS v1.0. The DOI of release v1.0.0, the version
+the paper reports, is [10.5281/zenodo.23197610](https://doi.org/10.5281/zenodo.23197610); the DOI
+[10.5281/zenodo.23197609](https://doi.org/10.5281/zenodo.23197609) always resolves to the latest
+version.
